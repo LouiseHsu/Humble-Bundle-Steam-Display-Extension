@@ -19,3 +19,7 @@ chrome.storage.sync.get('color', function (data) {
     changeColor.style.backgroundColor = data.color;
     changeColor.setAttribute('value', data.color);
 });
+
+function setup() {
+    loadJSON('https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview')
+}
