@@ -4,22 +4,25 @@
 
 'use strict';
 
-let changeColor = document.getElementById('changeColor');
+let button = document.getElementById('testbutton');
 
-changeColor.onclick = function (element) {
-    let color = element.target.value;
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.executeScript(
-            tabs[0].id,
-            { code: 'document.body.style.backgroundColor = "' + color + '";' });
-    });
+button.onclick = function (element) {
+    setup();
 };
 
-chrome.storage.sync.get('color', function (data) {
-    changeColor.style.backgroundColor = data.color;
-    changeColor.setAttribute('value', data.color);
-});
-
 function setup() {
-    loadJSON('https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview')
+  //  $.getJSON('https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview', gotData);
+    $.ajax({
+        url: 'https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview',
+        dataType: 'jsonp',
+        jsonp: 'callback',
+        jsonpCallback: 'gotData',
+        success: function () {
+            alert("success");
+        }
+    });
+}
+
+function gotData(data) {
+    console.log(data);
 }
