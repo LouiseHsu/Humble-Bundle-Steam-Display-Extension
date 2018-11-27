@@ -11,16 +11,7 @@ button.onclick = function (element) {
 };
 
 function setup() {
-  //  $.getJSON('https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview', gotData);
-    $.ajax({
-        url: 'https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview',
-        dataType: 'jsonp',
-        jsonp: 'callback',
-        jsonpCallback: 'gotData',
-        success: function () {
-            alert("success");
-        }
-    });
+    $.getJSON('https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview', gotData);
 }
 
 function gotData(data) {

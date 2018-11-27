@@ -2,12 +2,12 @@
   "name": "Getting Started Example",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": [ "tabs", "activeTab", "declarativeContent", "storage" ],
+  "permissions": [ "tabs", "activeTab", "declarativeContent", "storage", "https://store.steampowered.com/api/" ],
   "background": {
     "scripts": [ "background.js" ],
     "persistent": false
   },
-   "content_security_policy": "script-src 'self' https://store.steampowered.com/; object-src 'self'",
+   "content_security_policy": "script-src 'self' https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview; object-src 'self'",
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
