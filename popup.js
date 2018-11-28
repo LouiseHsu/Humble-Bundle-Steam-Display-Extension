@@ -7,6 +7,20 @@
 let button = document.getElementById('testbutton');
 
 button.onclick = function (element) {
+    // for each dd caption w/ 20 px height....
+    chrome.tabs.query({ 'active': true, 'currentWindow': true }, function (tabs) {
+        var currURL = tabs[0].url;
+        if (!currURL.includes("https://www.humblebundle.com/games")) {
+            button.textContent = "Sorry, this is not a valid humble bundle games page!";
+            return false;
+        } else {
+            chrome.tabs.sendMessage(tabs[0].id, { greeting: "getGameNames" }, function (response) {
+                console.log(response.farewell);
+            })
+        }
+    })
+  
+
     setup();
 };
 
