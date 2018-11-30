@@ -1,12 +1,14 @@
 // JavaScript source code
-chrome.runtime.onMessage.addListener(
+chrome.tabs.onMessage.addListener(
     function (request, sender, sendResponse) {
-        if (request.greeting == "getGameNames") {
-            var gameNames = document.getElementsByClassName('dd-image-box-text');
+        if (request.greeting == 'getGameNames') {
+            var gameNames = document.getElementsByClassName('dd-captions');
+            var listOfNames = [];
             for (var i = 0; i < gameNames.length; i++) {
-                var item = gameNames[i].textContent.trim;
-                console.log(item);
+                var item = gameNames[i].toString.trim();
+                listOfNames.push(item);
             }
-            sendResponse({farewell: "goodbye"});
         }
+        sendResponse({ matches: listOfNames });
+        return true;
     });

@@ -15,7 +15,7 @@ button.onclick = function (element) {
             return false;
         } else {
             chrome.tabs.sendMessage(tabs[0].id, { greeting: "getGameNames" }, function (response) {
-                console.log(response.farewell);
+                console.log(response.matches);
             })
         }
     })
