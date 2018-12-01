@@ -38,14 +38,20 @@ function setup() {
 // }
 
 function gotData(data) {
-    console.log(data);
-    alert("hi");
-    alert(data.applist.apps[0].appid);
-    // var found = getGameIdByName("Unium", data);
-    //
-    // console.log(found[0].appid);
-    // alert(found[0].appid);
-    // setup2();
+    let gameList = data.applist.apps;
+    let gameId = "";
+    let t1 = new Date().getTime();
+    for (let i = 0; i < gameList.length; i++) {
+        if (gameList[i].name === "Monster Clicker : Idle Halloween Strategy") {
+            gameId = gameList[i].appid;
+        }
+    }
+    let t2 = new Date().getTime();
+    alert(t2 - t1);
+    document.getElementById("timeTaken").innerHTML=t2 - t1;
+    document.getElementById("gameLink").innerHTML="https://store.steampowered.com/app/" + gameId;
+
+    setup2();
 }
 
 function setup2() {
@@ -53,7 +59,7 @@ function setup2() {
 }
 
 function gotData2(data) {
-    console.log(data);
+    alert(data);
 }
 
 // http://api.steampowered.com/ISteamApps/GetAppList/v0002/
