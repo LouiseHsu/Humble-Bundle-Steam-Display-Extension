@@ -2,7 +2,7 @@
   "name": "Getting Started Example",
   "version": "1.0",
   "description": "Build an Extension!",
-  "permissions": [ "tabs", "activeTab", "declarativeContent", "storage", "https://store.steampowered.com/api/" ],
+  "permissions": [ "tabs", "activeTab", "declarativeContent", "storage", "https://store.steampowered.com/api/", "http://api.steampowered.com/ISteamApps/GetAppList/v0002/" ],
   "content_scripts": [
     {
       "matches": [ "<all_urls>"],
