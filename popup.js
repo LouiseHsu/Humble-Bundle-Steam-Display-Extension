@@ -6,10 +6,10 @@
 
 let button = document.getElementById('testbutton');
 var games = [];
+var gameId = "";
 
 button.onclick = function () {
     // for each dd caption w/ 20 px height....
-    let games = [];
     chrome.tabs.query({ 'active': true, 'currentWindow': true }, function (tabs) {
         let currURL = tabs[0].url;
         if (!currURL.includes("https://www.humblebundle.com/games")) {
@@ -17,7 +17,6 @@ button.onclick = function () {
             return false;
         } else {
             chrome.tabs.sendMessage(tabs[0].id, { greeting: "getGameNames" }, function (response) {
-                console.log(response);
                 games = response;
             })
         }
@@ -31,23 +30,15 @@ function setup() {
     $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', gotData);
 }
 
-// function getGameIdByName(gameName, data) {
-//     return data.apps.filter(function (data) {
-//         return data.apps.name === gameName;
-//     })
-// }
-
 function gotData(data) {
     let gameList = data.applist.apps;
-    let gameId = "";
     let t1 = new Date().getTime();
     for (let i = 0; i < gameList.length; i++) {
-        if (gameList[i].name === "Monster Clicker : Idle Halloween Strategy") {
+        if (gameList[i].name === "Far Cry 5 - Deluxe Pack") {
             gameId = gameList[i].appid;
         }
     }
     let t2 = new Date().getTime();
-    alert(t2 - t1);
     document.getElementById("timeTaken").innerHTML=t2 - t1;
     document.getElementById("gameLink").innerHTML="https://store.steampowered.com/app/" + gameId;
 
@@ -55,11 +46,11 @@ function gotData(data) {
 }
 
 function setup2() {
-    $.getJSON('https://store.steampowered.com/api/appdetails/?appids=582010&cc=CA&filters=price_overview', gotData2);
+    $.getJSON('https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=CA&filters=price_overview', gotData2);
 }
 
-function gotData2(data) {
-    alert(data);
+function gotData2(gameData) {
+    console.log(gameData[gameId].data.price_overview.final);
 }
 
 // http://api.steampowered.com/ISteamApps/GetAppList/v0002/
