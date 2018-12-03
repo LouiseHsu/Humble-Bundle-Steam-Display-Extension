@@ -1,0 +1,6 @@
+button {
+    height: 30px;
+    text-align: center;
+    display: inline-block;
+    outline: none;
+}

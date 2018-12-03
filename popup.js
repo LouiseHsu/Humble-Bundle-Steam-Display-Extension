@@ -32,14 +32,11 @@ function setup() {
 
 function gotData(data) {
     let gameList = data.applist.apps;
-    let t1 = new Date().getTime();
     for (let i = 0; i < gameList.length; i++) {
         if (gameList[i].name === "Far Cry 5 - Deluxe Pack") {
             gameId = gameList[i].appid;
         }
     }
-    let t2 = new Date().getTime();
-    document.getElementById("timeTaken").innerHTML=t2 - t1;
     document.getElementById("gameLink").innerHTML="https://store.steampowered.com/app/" + gameId;
 
     setup2();
