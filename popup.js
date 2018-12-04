@@ -37,7 +37,7 @@ function gotData(data) {
             gameId = gameList[i].appid;
         }
     }
-    document.getElementById("gameLink").innerHTML="https://store.steampowered.com/app/" + gameId;
+    document.getElementById("gameLink").innerHTML="Link is: https://store.steampowered.com/app/" + gameId;
 
     setup2();
 }
