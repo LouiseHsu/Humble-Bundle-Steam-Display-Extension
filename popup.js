@@ -37,7 +37,9 @@ function gotData(data) {
             gameId = gameList[i].appid;
         }
     }
-    document.getElementById("gameLink").innerHTML="Link is: https://store.steampowered.com/app/" + gameId;
+    document.getElementById("gameLink").href="https://store.steampowered.com/app/" + gameId;
+    document.getElementById("gameLink").textContent="Far Cry 5 - Deluxe Pack";
+
 
     setup2();
 }
