@@ -9,6 +9,7 @@ chrome.runtime.onMessage.addListener(
                 console.log(item);
                 trimmedName.push(item);
             }
-            sendResponse({ trimmedName });
+            console.log(trimmedName.length);
+            sendResponse({ response: trimmedName });
         }
     });

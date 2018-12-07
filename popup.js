@@ -17,7 +17,7 @@ button.onclick = function () {
             return false;
         } else {
             chrome.tabs.sendMessage(tabs[0].id, { greeting: "getGameNames" }, function (response) {
-                games = response;
+                games = response.response;
             })
         }
     });
@@ -33,10 +33,20 @@ function setup() {
 function gotData(data) {
     let gameList = data.applist.apps;
     for (let i = 0; i < gameList.length; i++) {
-        if (gameList[i].name === "Far Cry 5 - Deluxe Pack") {
-            gameId = gameList[i].appid;
+        for (let j = 0; j < games.length; i++) {
+            if (gameList[i].name === games[j]) {
+                gameId = gameList[i].appid;
+                games.splice(j, 1);
+                // alert(gameId);
+                // alert(games[j])
+                document.getElementById("gameLink").href="https://store.steampowered.com/app/" + gameId;
+                document.getElementById("gameLink").textContent=games[j].toString();
+                // let steamUrl = "https://store.steampowered.com/app/" + gameId;
+                // var element = '<span class="entry"><a id = gameLink href=""></a></span>';
+            }
         }
     }
+
     document.getElementById("gameLink").href="https://store.steampowered.com/app/" + gameId;
     document.getElementById("gameLink").textContent="Far Cry 5 - Deluxe Pack";
 
@@ -45,7 +55,7 @@ function gotData(data) {
 }
 
 function setup2() {
-    $.getJSON('https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=CA&filters=price_overview', gotData2);
+    $.getJSON('https://store.steampowered.com/api/appdetails/?appids=' + gameId.toString() + '&cc=CA&filters=price_overview', gotData2);
 }
 
 function gotData2(gameData) {
