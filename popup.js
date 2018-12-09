@@ -31,16 +31,19 @@ function setup() {
 }
 
 function gotData(data) {
-    const allSteamGames = data.applist.apps;
+    let allSteamGames = data.applist.apps;
+    let successfulCount = 0;
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < allHumbleGameNames.length; j++) {
-            let gameName = allSteamGames[i].name.toString();
-            if (gameName === allHumbleGameNames[j]) {
+            if (allSteamGames[i].name === allHumbleGameNames[j]) {
                 gameId = allSteamGames[i].appid;
-                const newElement = '<span class="entry"><a class = game-link href=""></a></span>';
+                let newElement = '<span class="entry"><a class = game-link href="">' + allHumbleGameNames[j].toString() + '</a></span>';
+                let newGameRow = '<tr><td><a class = game-link href=""></a></td></tr>';
                 document.getElementById("game-list").insertAdjacentHTML('beforeend', newElement);
                 document.getElementById("game-list").lastChild.firstChild.href = "https://store.steampowered.com/app/" + gameId;
-                document.getElementById("game-list").lastChild.firstChild.textContent = allHumbleGameNames[j].toString();
+                document.getElementsByClassName("game-link").item(successfulCount).href = "https://store.steampowered.com/app/" + gameId;
+                successfulCount++;
+                // document.getElementById("game-list").lastChild.firstChild.textContent = allHumbleGameNames[j].toString();
                 break;
             }
 
