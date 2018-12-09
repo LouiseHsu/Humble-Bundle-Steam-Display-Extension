@@ -5,7 +5,7 @@
 'use strict';
 
 let button = document.getElementById('testbutton');
-var games = [];
+var allHumbleGameNames = [];
 var gameId = "";
 
 button.onclick = function () {
@@ -17,7 +17,7 @@ button.onclick = function () {
             return false;
         } else {
             chrome.tabs.sendMessage(tabs[0].id, { greeting: "getGameNames" }, function (response) {
-                games = response.response;
+                allHumbleGameNames = response.response;
             })
         }
     });
@@ -31,24 +31,24 @@ function setup() {
 }
 
 function gotData(data) {
-    let gameList = data.applist.apps;
-    for (let i = 0; i < gameList.length; i++) {
-        for (let j = 0; j < games.length; i++) {
-            if (gameList[i].name === games[j]) {
-                gameId = gameList[i].appid;
-                games.splice(j, 1);
-                // alert(gameId);
-                // alert(games[j])
-                document.getElementById("gameLink").href="https://store.steampowered.com/app/" + gameId;
-                document.getElementById("gameLink").textContent=games[j].toString();
-                // let steamUrl = "https://store.steampowered.com/app/" + gameId;
-                // var element = '<span class="entry"><a id = gameLink href=""></a></span>';
+    const allSteamGames = data.applist.apps;
+    for (let i = 0; i < allSteamGames.length; i++) {
+        for (let j = 0; j < allHumbleGameNames.length; j++) {
+            let gameName = allSteamGames[i].name.toString();
+            if (gameName === allHumbleGameNames[j]) {
+                gameId = allSteamGames[i].appid;
+                const newElement = '<span class="entry"><a class = game-link href=""></a></span>';
+                document.getElementById("game-list").insertAdjacentHTML('beforeend', newElement);
+                document.getElementById("game-list").lastChild.firstChild.href = "https://store.steampowered.com/app/" + gameId;
+                document.getElementById("game-list").lastChild.firstChild.textContent = allHumbleGameNames[j].toString();
+                break;
             }
+
         }
     }
-
-    document.getElementById("gameLink").href="https://store.steampowered.com/app/" + gameId;
-    document.getElementById("gameLink").textContent="Far Cry 5 - Deluxe Pack";
+    //
+    // document.getElementById("game-link").href="https://store.steampowered.com/app/" + gameId;
+    // document.getElementById("game-link").textContent="Far Cry 5 - Deluxe Pack";
 
 
     setup2();
