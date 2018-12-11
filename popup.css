@@ -15,4 +15,10 @@
 }
 #game-list {
     text-align: center;
+    width: 100%;
+}
+
+.entry {
+    overflow: hidden;
+    white-space: nowrap;
 }

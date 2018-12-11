@@ -38,9 +38,9 @@ function gotData(data) {
             if (allSteamGames[i].name === allHumbleGameNames[j]) {
                 gameId = allSteamGames[i].appid;
                 let newElement = '<span class="entry"><a class = game-link href="">' + allHumbleGameNames[j].toString() + '</a></span>';
-                let newGameRow = '<tr><td><a class = game-link href=""></a></td></tr>';
-                document.getElementById("game-list").insertAdjacentHTML('beforeend', newElement);
-                document.getElementById("game-list").lastChild.firstChild.href = "https://store.steampowered.com/app/" + gameId;
+                let newGameRow = '<tr><td><a class = game-link href="">' + allHumbleGameNames[j].toString() + '</a></td></tr>';
+                document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
+                // document.getElementById("game-list").lastChild.firstChild.href = "https://store.steampowered.com/app/" + gameId;
                 document.getElementsByClassName("game-link").item(successfulCount).href = "https://store.steampowered.com/app/" + gameId;
                 successfulCount++;
                 // document.getElementById("game-list").lastChild.firstChild.textContent = allHumbleGameNames[j].toString();
