@@ -1,18 +1,17 @@
-#button {
+#test-button {
     height: 30px;
     display: inline-block;
     outline: none;
+    background-color: aquamarine;
+    box-shadow: none;
+    border-radius: 10px;
 }
 
 #button-wrapper {
     text-align: center;
 }
 
-.entry {
-    display: inline-block;
-    text-align: center;
-    white-space: pre;
-}
+
 #game-list {
     text-align: center;
     width: 100%;
@@ -21,5 +20,16 @@
 .entry {
     overflow: hidden;
     white-space: nowrap;
-    width: 100%;
+}
+
+.game-link-cell {
+    width: 70%;
+}
+
+.game-price {
+    width: 30%;
+}
+
+.game-link {
+    text-decoration: none;
 }

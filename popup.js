@@ -4,7 +4,7 @@
 
 'use strict';
 
-let button = document.getElementById('testbutton');
+let button = document.getElementById('test-button');
 var allHumbleGameNames = [];
 var allViableHumbleGameIds = [];
 var allViableHumbleGameData = [];
@@ -22,8 +22,6 @@ button.onclick = function () {
             })
         }
     });
-  
-
     setup();
 };
 
@@ -38,19 +36,17 @@ function gotData(data) {
             if (allSteamGames[i].name === allHumbleGameNames[j]) {
                 let gameId = allSteamGames[i].appid;
                 allViableHumbleGameIds.unshift(gameId);
-                let newGameRow = '<tr class="entry"><td><a class = game-link href="">' + allHumbleGameNames[j].toString() + '</a></td></tr>';
+                let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link href="">' + allHumbleGameNames[j].toString() + '</a></td><td class = "game-price"></td></tr>';
                 document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
                 document.getElementsByClassName("game-link").item(allViableHumbleGameIds.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
-
         }
     }
-
-    getPrice();
+    getPrices();
 }
 
-function getPrice() {
+function getPrices() {
     for (let i = 0; i < allViableHumbleGameIds.length; i++) {
         console.log(allViableHumbleGameIds[i]);
         setup2(allViableHumbleGameIds[i]);
@@ -59,25 +55,21 @@ function getPrice() {
 }
 
 function injectPrices() {
-    for (let j = 0; j < allViableHumbleGameData.length; j++) {
+    for (let j = allViableHumbleGameData.length - 1; j >= 0; j--) {
         let price = allViableHumbleGameData[j][allViableHumbleGameIds[j]].data.price_overview.final;
-        console.log(price);
+        document.getElementsByClassName("game-price").item(j).textContent = price;
     }
 }
 
 function setup2(gameId) {
-    console.log('https://store.steampowered.com/api/appdetails/?appids=' + gameId.toString() + '&cc=CA&filters=price_overview');
     $.getJSON('https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=CA&filters=price_overview', gotData2);
 }
 
 function gotData2(data) {
     allViableHumbleGameData.push(data);
-    console.log(allViableHumbleGameIds.length);
     console.log(allViableHumbleGameData.length);
 
     if (allViableHumbleGameIds.length === allViableHumbleGameData.length) {
         injectPrices();
     }
 }
-
-// http://api.steampowered.com/ISteamApps/GetAppList/v0002/
