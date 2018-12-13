@@ -57,7 +57,8 @@ function getPrices() {
 function injectPrices() {
     for (let j = allViableHumbleGameData.length - 1; j >= 0; j--) {
         let price = allViableHumbleGameData[j][allViableHumbleGameIds[j]].data.price_overview.final;
-        document.getElementsByClassName("game-price").item(j).textContent = price;
+        price = price / 100;
+        document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
     }
 }
 
