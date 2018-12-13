@@ -55,11 +55,12 @@ function getPrices() {
 }
 
 function injectPrices() {
-    for (let j = allViableHumbleGameData.length - 1; j >= 0; j--) {
-        let price = allViableHumbleGameData[j][allViableHumbleGameIds[j]].data.price_overview.final;
+    for (let j = 1; j <= allViableHumbleGameData.length; j++) {
+        let price = allViableHumbleGameData[j - 1][allViableHumbleGameIds[j - 1]].data.price_overview.final;
         price = price / 100;
-        document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
-    }
+        console.log(price);
+        document.getElementsByClassName("game-price").item(allViableHumbleGameData.length - j).textContent = "$" + price;
+}
 }
 
 function setup2(gameId) {
