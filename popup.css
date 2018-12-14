@@ -1,5 +1,4 @@
 body {
-    background-color: paleturquoise;
     height: 100%;
 }
 
@@ -7,11 +6,11 @@ body {
     height: 30px;
     display: inline-block;
     outline: none;
-    background-color: paleturquoise;
+    background-color: white;
     box-shadow: none;
     border-radius: 10px;
     border-style: solid;
-    border-color: white;
+    border-color: paleturquoise;
     cursor: pointer;
     -webkit-transition: background-color 0.3s;
     -moz-transition:    background-color 0.3s;
@@ -21,7 +20,7 @@ body {
 }
 
 #test-button:hover {
-    background-color: white;
+    background-color: paleturquoise;
     -webkit-transition: color 0.3s;
     -moz-transition:    color 0.3s;
     -ms-transition:     color 0.3s;
@@ -30,11 +29,16 @@ body {
 }
 
 #button-text {
-    color: white;
+    color: paleturquoise;
+    -webkit-transition: color 0.3s;
+    -moz-transition:    color 0.3s;
+    -ms-transition:     color 0.3s;
+    -o-transition:      color 0.3s;
+    transition:         color 0.3s;
 }
 
-#button-text:hover{
-    color: paleturquoise;
+#test-button:hover #button-text{
+    color: white;
 }
 
 #button-wrapper {

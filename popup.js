@@ -21,10 +21,14 @@ button.onclick = function () {
                 allHumbleGameNames = response.response;
             })
         }
-        let tableHeader = '<tr><th>Game</th><th>Current Price</th></tr>';
-        document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
+        clearListOnReload(function () {
+            let tableHeader = '<tr><th>Game</th><th>Current Price</th></tr>';
+            document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
+            allViableHumbleGameIds = [];
+            allViableHumbleGameData = [];
+            parseNameData();
+        })
     });
-    parseNameData();
 };
 
 function parseNameData() {
@@ -56,6 +60,7 @@ function getPrices() {
 
 function injectPrices() {
     for (let j = 0; j < allViableHumbleGameData.length; j++) {
+        console.log(allViableHumbleGameData[j][allViableHumbleGameIds[j]]);
         let price = allViableHumbleGameData[j][allViableHumbleGameIds[j]].data.price_overview.final;
         price = price / 100;
         document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
@@ -72,4 +77,9 @@ function processPriceData(data) {
     if (allViableHumbleGameIds.length === allViableHumbleGameData.length) {
         injectPrices();
     }
+}
+
+function clearListOnReload(callback) {
+    $('#game-list').empty();
+    callback();
 }
