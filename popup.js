@@ -5,29 +5,27 @@
 'use strict';
 
 let button = document.getElementById('test-button');
-var allHumbleGameNames = [];
-var allViableHumbleGameIds = [];
-var allViableHumbleGameData = [];
+let allHumbleGameNames = [];
+let allViableHumbleGameIds = [];
+let allViableHumbleGameData = [];
 
 button.onclick = function () {
     // for each dd caption w/ 20 px height....
-    chrome.tabs.query({ 'active': true, 'currentWindow': true }, function (tabs) {
+    chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         let currURL = tabs[0].url;
         if (!currURL.includes("https://www.humblebundle.com/games")) {
             button.textContent = "Sorry, this is not a valid humble bundle games page!";
             return false;
         } else {
-            chrome.tabs.sendMessage(tabs[0].id, { greeting: "getGameNames" }, function (response) {
+            chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
                 allHumbleGameNames = response.response;
             })
         }
-        clearListOnReload(function () {
-            let tableHeader = '<tr><th>Game</th><th>Current Price</th></tr>';
-            document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
-            allViableHumbleGameIds = [];
-            allViableHumbleGameData = [];
-            parseNameData();
-        })
+        button.remove();
+        let tableHeader = '<tr><th>Game</th><th>Current Price</th></tr>';
+        document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
+        parseNameData();
+
     });
 };
 
@@ -42,7 +40,7 @@ function processNameData(data) {
             if (allSteamGames[i].name === allHumbleGameNames[j]) {
                 let gameId = allSteamGames[i].appid;
                 allViableHumbleGameIds.push(gameId);
-                let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link href="">' + allHumbleGameNames[j].toString() + '</a></td><td class = "game-price"></td></tr>';
+                let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + allHumbleGameNames[j].toString() + '</a></td><td class = "game-price"></td></tr>';
                 document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
                 document.getElementsByClassName("game-link").item(allViableHumbleGameIds.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
@@ -60,7 +58,6 @@ function getPrices() {
 
 function injectPrices() {
     for (let j = 0; j < allViableHumbleGameData.length; j++) {
-        console.log(allViableHumbleGameData[j][allViableHumbleGameIds[j]]);
         let price = allViableHumbleGameData[j][allViableHumbleGameIds[j]].data.price_overview.final;
         price = price / 100;
         document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
@@ -77,9 +74,4 @@ function processPriceData(data) {
     if (allViableHumbleGameIds.length === allViableHumbleGameData.length) {
         injectPrices();
     }
-}
-
-function clearListOnReload(callback) {
-    $('#game-list').empty();
-    callback();
 }
