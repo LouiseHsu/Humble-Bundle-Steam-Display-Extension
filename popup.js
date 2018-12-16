@@ -8,6 +8,7 @@ let button = document.getElementById('test-button');
 let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
 let allViableHumbleGameData = [];
+
 $(function() {
     button.onclick = function () {
         // for each dd caption w/ 20 px height....
@@ -25,7 +26,6 @@ $(function() {
             let tableHeader = '<tr id="table-header"><th>Game</th><th>Price</th></tr>';
             document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
             parseNameData();
-
         });
     };
 });
@@ -48,25 +48,23 @@ function processNameData(data) {
             }
         }
     }
+    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
     getPrices();
 }
 
 function getPrices() {
-    for (let i = 0; i < allViableHumbleGameIds.length; i++) {
-        parsePrices(allViableHumbleGameIds[i]);
-    }
-}
-
-function injectPrices() {
-    for (let j = 0; j < allViableHumbleGameData.length; j++) {
-        let price = allViableHumbleGameData[j][allViableHumbleGameIds[j]].data.price_overview.final;
-        price = price / 100;
-        document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
-}
+    $.each(allViableHumbleGameIds, function (index) {
+        parsePrices(allViableHumbleGameIds[index]);
+    });
 }
 
 function parsePrices(gameId) {
-    $.getJSON('https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=CA&filters=price_overview', processPriceData);
+    $.ajax({
+        async: false,
+        dataType: "json",
+        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=CA&filters=price_overview',
+        success: processPriceData
+    });
 }
 
 function processPriceData(data) {
@@ -76,3 +74,16 @@ function processPriceData(data) {
         injectPrices();
     }
 }
+
+function injectPrices() {
+    for (let j = 0; j < allViableHumbleGameData.length; j++) {
+        console.log(allViableHumbleGameData[j]);
+        let key = Object.keys(allViableHumbleGameData[j]);
+        let price = allViableHumbleGameData[j][key].data.price_overview.final;
+        price = price / 100;
+        console.log(price);
+        document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
+    }
+}
+
+
