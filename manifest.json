@@ -5,7 +5,7 @@
   "permissions": [ "tabs", "activeTab", "declarativeContent", "storage", "https://store.steampowered.com/api/", "http://api.steampowered.com/ISteamApps/GetAppList/v0002/" ],
   "content_scripts": [
     {
-      "matches": [ "<all_urls>"],
+      "matches": [ "https://www.humblebundle.com/games/*"],
       "js": [ "content.js" ]
     }
 
@@ -26,6 +26,5 @@
     "32": "images/get_started32.png",
     "48": "images/get_started48.png"
   },
-  "options_page": "options.html",
   "manifest_version": 2
 }

@@ -8,26 +8,27 @@ let button = document.getElementById('test-button');
 let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
 let allViableHumbleGameData = [];
+$(function() {
+    button.onclick = function () {
+        // for each dd caption w/ 20 px height....
+        chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
+            let currURL = tabs[0].url;
+            if (!currURL.includes("https://www.humblebundle.com/games")) {
+                button.textContent = "Sorry, this is not a valid humble bundle games page!";
+                return false;
+            } else {
+                chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
+                    allHumbleGameNames = response.response;
+                })
+            }
+            button.remove();
+            let tableHeader = '<tr id="table-header"><th>Game</th><th>Price</th></tr>';
+            document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
+            parseNameData();
 
-button.onclick = function () {
-    // for each dd caption w/ 20 px height....
-    chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
-        let currURL = tabs[0].url;
-        if (!currURL.includes("https://www.humblebundle.com/games")) {
-            button.textContent = "Sorry, this is not a valid humble bundle games page!";
-            return false;
-        } else {
-            chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
-                allHumbleGameNames = response.response;
-            })
-        }
-        button.remove();
-        let tableHeader = '<tr><th>Game</th><th>Current Price</th></tr>';
-        document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
-        parseNameData();
-
-    });
-};
+        });
+    };
+});
 
 function parseNameData() {
     $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', processNameData);

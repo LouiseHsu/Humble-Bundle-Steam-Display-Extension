@@ -1,44 +1,30 @@
+@font-face {
+    font-family: 'Raleway';
+    src: url("https://fonts.googleapis.com/css?family=Raleway");
+}
 body {
-    height: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    border-color: black;
+    background: #494F5C;
+    margin: 15px;
 }
 
 #test-button {
     height: 30px;
     display: inline-block;
     outline: none;
-    background-color: white;
+    background-color: #98B248;
     box-shadow: none;
     border-radius: 10px;
     border-style: solid;
-    border-color: paleturquoise;
+    border-color: #98B248;
     cursor: pointer;
-    -webkit-transition: background-color 0.3s;
-    -moz-transition:    background-color 0.3s;
-    -ms-transition:     background-color 0.3s;
-    -o-transition:      background-color 0.3s;
-    transition:         background-color 0.3s;
-}
-
-#test-button:hover {
-    background-color: paleturquoise;
-    -webkit-transition: color 0.3s;
-    -moz-transition:    color 0.3s;
-    -ms-transition:     color 0.3s;
-    -o-transition:      color 0.3s;
-    transition:         color 0.3s;
 }
 
 #button-text {
-    color: paleturquoise;
-    -webkit-transition: color 0.3s;
-    -moz-transition:    color 0.3s;
-    -ms-transition:     color 0.3s;
-    -o-transition:      color 0.3s;
-    transition:         color 0.3s;
-}
-
-#test-button:hover #button-text{
     color: white;
+    font-weight: bold;
 }
 
 #button-wrapper {
@@ -49,21 +35,52 @@ body {
 #game-list {
     text-align: center;
     width: 100%;
+    border-collapse: collapse;
 }
 
 .entry {
     overflow: hidden;
     white-space: nowrap;
+    width: 60%;
+    -webkit-transition: background-color 0.3s;
+    -moz-transition:    background-color 0.3s;
+    -o-transition:      background-color 0.3s;
+    transition:         background-color 0.3s;
 }
 
-.game-link-cell {
-    width: 70%;
+.entry:hover {
+    background-color: #33363F;
 }
+
+.game-link-cell:hover .game-link, .game-link-cell.hover .game-link {
+    color: white;
+}
+
+.game-link-cell{
+    padding: 5px;
+}
+
 
 .game-price {
-    width: 30%;
+    font-family: 'Raleway', sans-serif;
+    color: #7D828A;
+    width: 40%;
 }
 
 .game-link {
+    font-family: 'Raleway', sans-serif;
+    color: #7D828A;
     text-decoration: none;
+    -webkit-transition: color 0.3s;
+    -moz-transition:    color 0.3s;
+    -o-transition:      color 0.3s;
+    transition:         color 0.3s;
+}
+
+#table-header th {
+    font-family: 'Raleway', sans-serif;
+    color: #7D828A;
+    text-decoration: none;
+    font-size: larger;
+    padding: 10px;
 }
