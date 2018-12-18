@@ -27,9 +27,6 @@ function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
             allHumbleGameNames = response.response;
-            button.remove();
-            let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
-            document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
             parseNameData();
         });
     })
@@ -40,6 +37,9 @@ function parseNameData() {
 }
 
 function processNameData(data) {
+    button.remove();
+    let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
+    document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
     let allSteamGames = data.applist.apps;
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < allHumbleGameNames.length; j++) {
@@ -53,7 +53,9 @@ function processNameData(data) {
             }
         }
     }
+    document.getElementById("content").style.width = window.getComputedStyle(document.getElementById("size-manager")).width;
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
+    
     getPrices();
 }
 
