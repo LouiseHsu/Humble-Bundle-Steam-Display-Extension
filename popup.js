@@ -18,6 +18,7 @@ $(function() {
     });
 
     button.onclick = function () {
+        document.getElementById('loading').style.zIndex = "5";
         runApp();
     };
 });
@@ -27,7 +28,7 @@ function runApp() {
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
             allHumbleGameNames = response.response;
             button.remove();
-            let tableHeader = '<tr id="table-header"><th>Game</th><th>Price</th></tr>';
+            let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
             document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
             parseNameData();
         });
@@ -81,13 +82,12 @@ function processPriceData(data) {
 
 function injectPrices() {
     for (let j = 0; j < allViableHumbleGameData.length; j++) {
-        console.log(allViableHumbleGameData[j]);
         let key = Object.keys(allViableHumbleGameData[j]);
         let price = allViableHumbleGameData[j][key].data.price_overview.final;
         price = price / 100;
-        console.log(price);
         document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
     }
+    document.getElementById('loading').style.zIndex = "-1";
 }
 
 
