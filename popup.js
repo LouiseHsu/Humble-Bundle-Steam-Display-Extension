@@ -8,11 +8,12 @@ let button = document.getElementById('test-button');
 let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
 let allViableHumbleGameData = [];
+let allViableHumbleGameNames = [];
 
 $(function() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         let currURL = tabs[0].url;
-        if (!currURL.includes("https://www.humblebundle.com/games")) {
+        if (!currURL.includes("https://www.humblebundle.com/")) {
             window.close();
         }
     });
@@ -44,6 +45,7 @@ function processNameData(data) {
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < allHumbleGameNames.length; j++) {
             if (allSteamGames[i].name === allHumbleGameNames[j]) {
+                allViableHumbleGameNames.push(allHumbleGameNames[j]);
                 let gameId = allSteamGames[i].appid;
                 allViableHumbleGameIds.push(gameId);
                 let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + allHumbleGameNames[j].toString() + '</a></td><td class = "game-price"></td></tr>';
@@ -52,6 +54,11 @@ function processNameData(data) {
                 break;
             }
         }
+    }
+    document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Game Names</th></tr></table>');
+    let unParsedGames = allHumbleGameNames.filter(x => !allViableHumbleGameNames.includes(x));
+    for (let i = 0; i < unParsedGames.length; i ++) {
+        document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="game-link-cell">' + unParsedGames[i] + '</td></tr>')
     }
     document.getElementById("content").style.width = window.getComputedStyle(document.getElementById("size-manager")).width;
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;

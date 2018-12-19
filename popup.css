@@ -4,6 +4,7 @@ body {
 
 #content {
     height: 30px;
+    /*width: 107px;*/
     overflow: hidden;
     border-color: black;
     background: #494F5C;
