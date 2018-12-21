@@ -92,6 +92,26 @@ body {
     padding: 7px 7px 10px;
 }
 
+#failed-table-header th {
+    font-family: 'Raleway', sans-serif;
+    color: #7D828A;
+    text-decoration: none;
+    font-size: larger;
+    padding: 7px 7px 10px;
+}
+
+#failed-list {
+    width: 100%;
+    text-align: center;
+}
+
+.failed-game {
+    font-family: 'Raleway', sans-serif;
+    font-weight: bold;
+    color: #7D828A;
+    padding: 5px;
+}
+
 #loading {
     width: 107px;
     height: 60px;

@@ -55,10 +55,10 @@ function processNameData(data) {
             }
         }
     }
-    document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Game Names</th></tr></table>');
+    document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
     let unParsedGames = allHumbleGameNames.filter(x => !allViableHumbleGameNames.includes(x));
     for (let i = 0; i < unParsedGames.length; i ++) {
-        document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="game-link-cell">' + unParsedGames[i] + '</td></tr>')
+        document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
     }
     document.getElementById("content").style.width = window.getComputedStyle(document.getElementById("size-manager")).width;
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
