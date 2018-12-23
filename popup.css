@@ -112,6 +112,14 @@ body {
     padding: 5px;
 }
 
+.failed-game:hover{
+    color: white;
+}
+
+hr {
+    border-color: #7D828A;
+}
+
 #loading {
     width: 107px;
     height: 60px;
