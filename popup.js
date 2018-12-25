@@ -4,11 +4,18 @@
 
 'use strict';
 
-let button = document.getElementById('test-button');
+let runbutton = document.getElementById('run-button');
+let currencybutton = document.getElementById('currency-button');
 let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
 let allViableHumbleGameData = [];
 let allViableHumbleGameNames = [];
+const currencyenum = {
+    CANADIAN: 'CA',
+    AMERICAN: 'US'
+};
+let currentCurrency = currencyenum.CANADIAN;
+
 
 $(function() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
@@ -18,10 +25,18 @@ $(function() {
         }
     });
 
-    button.onclick = function () {
+    runbutton.onclick = function () {
         document.getElementById('loading').style.zIndex = "5";
         runApp();
     };
+
+    currencybutton.onclick = function () {
+        if (currentCurrency === currencyenum.CANADIAN) {
+            currentCurrency = currencyenum.AMERICAN;
+        } else {
+            currentCurrency = currencyenum.CANADIAN;
+        }
+    }
 });
 
 function runApp() {
@@ -38,7 +53,7 @@ function parseNameData() {
 }
 
 function processNameData(data) {
-    button.remove();
+    runbutton.remove();
     let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
     document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
     let allSteamGames = data.applist.apps;
@@ -76,7 +91,7 @@ function parsePrices(gameId) {
     $.ajax({
         async: false,
         dataType: "json",
-        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=CA&filters=price_overview',
+        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=' + currentCurrency + '&filters=price_overview',
         success: processPriceData
     });
 }

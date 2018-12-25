@@ -12,7 +12,7 @@ body {
     -webkit-transition: all ease 0.75s;
 }
 
-#test-button {
+#run-button {
     height: 30px;
     display: inline-block;
     outline: none;
