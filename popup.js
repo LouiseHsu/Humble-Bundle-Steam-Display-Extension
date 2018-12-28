@@ -16,6 +16,10 @@ const currencyenum = {
 };
 let currentCurrency = currencyenum.CANADIAN;
 
+$( function() {
+    document.getElementById("tabs").tabs();
+} );
+
 
 $(function() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {

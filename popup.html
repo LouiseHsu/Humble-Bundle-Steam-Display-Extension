@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <script src="jquery-3.3.1.min.js"></script>
+<script src="jquery-ui.js"></script>
 <html lang="">
 <head>
     <title>Humble Bundle Steam Tool</title>
@@ -7,18 +8,23 @@
     <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
-<div id="content">
-    <div id="size-manager">
-        <div id="loading">
-            <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..." />
+<div id="tabs">
+    <ul>
+        <li><a href="#content">Tab 1</a></li>
+    </ul>
+    <div id="content">
+        <div id="size-manager">
+            <div id="loading">
+                <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..."/>
+            </div>
+            <div id="button-wrapper">
+                <button id="run-button"><span id="button-text">ANALYZE</span></button>
+            </div>
+            <button id="currency-button">Change Currency</button>
+            <hr>
+            <table id="game-list">
+            </table>
         </div>
-        <div id="button-wrapper">
-            <button id="run-button"><span id="button-text">ANALYZE</span></button>
-        </div>
-        <button id="currency-button">Change Currency</button>
-        <hr>
-        <table id="game-list">
-        </table>
     </div>
 </div>
 <script src="popup.js"></script>
