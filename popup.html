@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <script src="jquery-3.3.1.min.js"></script>
-<script src="jquery-ui.js"></script>
 <html lang="">
 <head>
     <title>Humble Bundle Steam Tool</title>
     <link href="https://fonts.googleapis.com/css?family=Raleway:600" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
-<div id="tabs">
-    <ul>
-        <li><a href="#content">Tab 1</a></li>
-    </ul>
-    <div id="content">
-        <div id="size-manager">
-            <div id="loading">
-                <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..."/>
-            </div>
-            <div id="button-wrapper">
-                <button id="run-button"><span id="button-text">ANALYZE</span></button>
-            </div>
-            <button id="currency-button">Change Currency</button>
-            <hr>
-            <table id="game-list">
-            </table>
+<div id="content">
+    <div id="size-manager">
+        <div id="loading">
+            <img id="loading-image" src="images/ajax-loader.gif" alt="Loading..." />
         </div>
+        <div id="button-wrapper">
+            <button id="run-button"><span id="button-text">ANALYZE</span></button>
+        </div>
+        <table id="game-list">
+        </table>
     </div>
+</div>
+<div id="settings">
+    <button id="currency">Change Currency</button>
 </div>
 <script src="popup.js"></script>
 </body>
