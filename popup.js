@@ -5,7 +5,8 @@
 'use strict';
 
 let runbutton = document.getElementById('run-button');
-let currencybutton = document.getElementById('currency-button');
+let currencybutton;
+let settingsbutton = document.getElementById("settings-button");
 let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
 let allViableHumbleGameData = [];
@@ -29,14 +30,21 @@ $(function() {
         runApp();
     };
 
-    currencybutton.onclick = function () {
-        if (currentCurrency === currencyenum.CANADIAN) {
-            currentCurrency = currencyenum.AMERICAN;
-        } else {
-            currentCurrency = currencyenum.CANADIAN;
-        }
+    settingsbutton.onclick = function () {
+        document.getElementById('settings').style.zIndex = "5";
+        currencybutton = document.getElementById('currency-button');
     }
+
 });
+
+
+currencybutton.onclick = function () {
+    if (currentCurrency === currencyenum.CANADIAN) {
+        currentCurrency = currencyenum.AMERICAN;
+    } else {
+        currentCurrency = currencyenum.CANADIAN;
+    }
+}
 
 function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
