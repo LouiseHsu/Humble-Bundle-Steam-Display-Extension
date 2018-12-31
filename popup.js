@@ -5,7 +5,6 @@
 'use strict';
 
 let runbutton = document.getElementById('run-button');
-let currencybutton;
 let settingsbutton = document.getElementById("settings-button");
 let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
@@ -28,7 +27,13 @@ $(function () {
 
     settingsbutton.onclick = function () {
         document.getElementById('settings').style.zIndex = "5";
-        currencybutton = document.getElementById('currency-button');
+        document.getElementById('settings').style.display = "block";
+
+        document.getElementById("back-button").onclick = function () {
+            document.getElementById('settings').style.zIndex = "-1";
+            document.getElementById('settings').style.display = "none";
+        };
+
         let countryList = document.getElementById("country-list");
         countryList.onchange = function () {
             currCountry = countryList.options[countryList.selectedIndex].value;
@@ -51,6 +56,7 @@ function parseNameData() {
 }
 
 function processNameData(data) {
+    settingsbutton.remove();
     runbutton.remove();
     let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
     document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);

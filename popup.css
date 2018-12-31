@@ -25,12 +25,30 @@ body {
 
 #settings {
     top: 0;
-    height: 72px;
+    /*height: 72px;*/
     width: 107px;
     position: absolute;
     background-color: #494F5C;
     z-index: -1;
-    /*display: none;*/
+    text-align: center;
+    display: none;
+    padding: 10px 0 10px;
+}
+
+#back-button {
+    cursor: pointer;
+    color: #7D828A;
+}
+
+#country-label {
+    font-family: 'Raleway', sans-serif;
+    color: #7D828A;
+    padding: 5px;
+    margin: 0;
+}
+
+#country-list {
+    margin: 10px;
 }
 
 #run-button {
