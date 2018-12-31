@@ -11,13 +11,9 @@ let allHumbleGameNames = [];
 let allViableHumbleGameIds = [];
 let allViableHumbleGameData = [];
 let allViableHumbleGameNames = [];
-const currencyenum = {
-    CANADIAN: 'CA',
-    AMERICAN: 'US'
-};
-let currentCurrency = currencyenum.CANADIAN;
+let currCountry = "CA";
 
-$(function() {
+$(function () {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         let currURL = tabs[0].url;
         if (!currURL.includes("https://www.humblebundle.com/")) {
@@ -33,18 +29,13 @@ $(function() {
     settingsbutton.onclick = function () {
         document.getElementById('settings').style.zIndex = "5";
         currencybutton = document.getElementById('currency-button');
+        let countryList = document.getElementById("country-list");
+        countryList.onchange = function () {
+            currCountry = countryList.options[countryList.selectedIndex].value;
+        }
     }
 
 });
-
-
-currencybutton.onclick = function () {
-    if (currentCurrency === currencyenum.CANADIAN) {
-        currentCurrency = currencyenum.AMERICAN;
-    } else {
-        currentCurrency = currencyenum.CANADIAN;
-    }
-}
 
 function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
@@ -79,12 +70,12 @@ function processNameData(data) {
     }
     document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
     let unParsedGames = allHumbleGameNames.filter(x => !allViableHumbleGameNames.includes(x));
-    for (let i = 0; i < unParsedGames.length; i ++) {
+    for (let i = 0; i < unParsedGames.length; i++) {
         document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
     }
     document.getElementById("content").style.width = window.getComputedStyle(document.getElementById("size-manager")).width;
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
-    
+
     getPrices();
 }
 
@@ -98,7 +89,7 @@ function parsePrices(gameId) {
     $.ajax({
         async: false,
         dataType: "json",
-        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=' + currentCurrency + '&filters=price_overview',
+        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=' + currCountry + '&filters=price_overview',
         success: processPriceData
     });
 }
