@@ -1,4 +1,3 @@
-// JavaScript source code
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.greeting === "getGameNames") {
@@ -6,10 +5,8 @@ chrome.runtime.onMessage.addListener(
             let trimmedName = [];
             for (let i = 0; i < gameNames.length; i++) {
                 let item = gameNames[i].textContent.toString().trim();
-                console.log(item);
                 trimmedName.push(item);
             }
-            console.log(trimmedName.length);
-            sendResponse({ response: trimmedName });
+            sendResponse({response: trimmedName});
         }
     });

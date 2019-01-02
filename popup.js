@@ -39,7 +39,6 @@ $(function () {
             currCountry = countryList.options[countryList.selectedIndex].value;
         }
     }
-
 });
 
 function runApp() {
@@ -63,7 +62,7 @@ function processNameData(data) {
     let allSteamGames = data.applist.apps;
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < allHumbleGameNames.length; j++) {
-            if (allSteamGames[i].name === allHumbleGameNames[j]) {
+            if (allSteamGames[i].name === allHumbleGameNames[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === allHumbleGameNames[j].replace(/[^a-zA-Z0-9]/g, '')) {
                 allViableHumbleGameNames.push(allHumbleGameNames[j]);
                 let gameId = allSteamGames[i].appid;
                 allViableHumbleGameIds.push(gameId);
@@ -79,9 +78,6 @@ function processNameData(data) {
     for (let i = 0; i < unParsedGames.length; i++) {
         document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
     }
-    document.getElementById("content").style.width = window.getComputedStyle(document.getElementById("size-manager")).width;
-    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
-
     getPrices();
 }
 
@@ -116,6 +112,7 @@ function injectPrices() {
         document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
     }
     document.getElementById('loading').style.zIndex = "-1";
+    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
 }
 
 
