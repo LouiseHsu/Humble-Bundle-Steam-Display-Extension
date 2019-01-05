@@ -9,4 +9,8 @@ chrome.runtime.onMessage.addListener(
             }
             sendResponse({response: trimmedName});
         }
+        if (request.greeting === "injectLinks") {
+            let title = console.log(document.title);
+            sendResponse({response: title})
+        }
     });
