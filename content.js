@@ -7,10 +7,17 @@ chrome.runtime.onMessage.addListener(
                 let item = gameNames[i].textContent.toString().trim();
                 trimmedName.push(item);
             }
+            console.log("first msg content");
             sendResponse({response: trimmedName});
         }
+
         if (request.greeting === "injectLinks") {
-            let title = console.log(document.title);
-            sendResponse({response: title})
+            console.log("second msg content");
+            for (let i = 0; i < document.getElementsByClassName('dd-image-box-text').length; i++) {
+                console.log("sssssssss");
+                document.getElementsByClassName('dd-image-box-text')[i].textContent = "changed";
+                sendResponse({response: "worked"});
+            }
         }
+
     });

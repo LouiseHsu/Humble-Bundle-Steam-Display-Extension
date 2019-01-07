@@ -45,7 +45,6 @@ function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
             allHumbleGameNames = response.response;
-            console.log(tabs);
             parseNameData();
         });
     })
@@ -116,8 +115,8 @@ function injectPrices() {
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
 
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
+        console.log(tabs);
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "injectLinks"}, function (response) {
-            alert("second response recieved");
             console.log(tabs);
             console.log(response);
         });

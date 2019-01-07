@@ -8,7 +8,6 @@
       "matches": [ "https://www.humblebundle.com/games/*"],
       "js": [ "content.js" ]
     }
-
   ],
   "web_accessible_resources": ["images/ajax-loader.gif"],
    "content_security_policy": "script-src 'self' ; object-src 'self'",
