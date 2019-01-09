@@ -6,10 +6,11 @@
 
 let runbutton = document.getElementById('run-button');
 let settingsbutton = document.getElementById("settings-button");
-let allHumbleGameNames = [];
-let allViableHumbleGameIds = [];
-let allViableHumbleGameData = [];
-let allViableHumbleGameNames = [];
+let namesOnPage = [];
+let viableIds = [];
+let viableGameData = [];
+let viableNames = [];
+let normalizedNames = [];
 let currCountry = "CA";
 
 $(function () {
@@ -44,7 +45,7 @@ $(function () {
 function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
-            allHumbleGameNames = response.response;
+            namesOnPage = response.response;
             parseNameData();
         });
     })
@@ -61,20 +62,21 @@ function processNameData(data) {
     document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
     let allSteamGames = data.applist.apps;
     for (let i = 0; i < allSteamGames.length; i++) {
-        for (let j = 0; j < allHumbleGameNames.length; j++) {
-            if (allSteamGames[i].name === allHumbleGameNames[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === allHumbleGameNames[j].replace(/[^a-zA-Z0-9]/g, '')) {
-                allViableHumbleGameNames.push(allHumbleGameNames[j]);
+        for (let j = 0; j < namesOnPage.length; j++) {
+            if (allSteamGames[i].name === namesOnPage[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')) {
+                viableNames.push(namesOnPage[j]);
+                normalizedNames.push(namesOnPage[j].replace(/[^a-zA-Z0-9]/g, ''));
                 let gameId = allSteamGames[i].appid;
-                allViableHumbleGameIds.push(gameId);
-                let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + allHumbleGameNames[j].toString() + '</a></td><td class = "game-price"></td></tr>';
+                viableIds.push(gameId);
+                let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a></td><td class = "game-price"></td></tr>';
                 document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
-                document.getElementsByClassName("game-link").item(allViableHumbleGameIds.length - 1).href = "https://store.steampowered.com/app/" + gameId;
+                document.getElementsByClassName("game-link").item(viableIds.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
         }
     }
     document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
-    let unParsedGames = allHumbleGameNames.filter(x => !allViableHumbleGameNames.includes(x));
+    let unParsedGames = namesOnPage.filter(x => !viableNames.includes(x));
     for (let i = 0; i < unParsedGames.length; i++) {
         document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
     }
@@ -82,8 +84,8 @@ function processNameData(data) {
 }
 
 function getPrices() {
-    $.each(allViableHumbleGameIds, function (index) {
-        parsePrices(allViableHumbleGameIds[index]);
+    $.each(viableIds, function (index) {
+        parsePrices(viableIds[index]);
     });
 }
 
@@ -97,17 +99,17 @@ function parsePrices(gameId) {
 }
 
 function processPriceData(data) {
-    allViableHumbleGameData.push(data);
+    viableGameData.push(data);
 
-    if (allViableHumbleGameIds.length === allViableHumbleGameData.length) {
+    if (viableIds.length === viableGameData.length) {
         injectPrices();
     }
 }
 
 function injectPrices() {
-    for (let j = 0; j < allViableHumbleGameData.length; j++) {
-        let key = Object.keys(allViableHumbleGameData[j]);
-        let price = allViableHumbleGameData[j][key].data.price_overview.final;
+    for (let j = 0; j < viableGameData.length; j++) {
+        let key = Object.keys(viableGameData[j]);
+        let price = viableGameData[j][key].data.price_overview.final;
         price = price / 100;
         document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
     }
@@ -116,7 +118,11 @@ function injectPrices() {
 
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         console.log(tabs);
-        chrome.tabs.sendMessage(tabs[0].id, {greeting: "injectLinks"}, function (response) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            greeting: "injectLinks",
+            gameNames: normalizedNames,
+            gameIds: viableIds
+        }, function (response) {
             console.log(tabs);
             console.log(response);
         });

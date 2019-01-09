@@ -7,17 +7,26 @@ chrome.runtime.onMessage.addListener(
                 let item = gameNames[i].textContent.toString().trim();
                 trimmedName.push(item);
             }
-            console.log("first msg content");
             sendResponse({response: trimmedName});
         }
 
         if (request.greeting === "injectLinks") {
-            console.log("second msg content");
-            for (let i = 0; i < document.getElementsByClassName('dd-image-box-text').length; i++) {
-                console.log("sssssssss");
-                document.getElementsByClassName('dd-image-box-text')[i].textContent = "changed";
-                sendResponse({response: "worked"});
+            let counter = 0;
+            let gameNames = request.gameNames;
+            let gameIds = request.gameIds;
+            console.log(gameNames);
+            let gamesOnPage = document.getElementsByClassName('dd-image-box-text');
+            for (let i = 0; i < gamesOnPage.length; i++) {
+                if (gameNames.includes(gamesOnPage[i].textContent.replace(/[^a-zA-Z0-9]/g, ''))) {
+                    let url = 'https://store.steampowered.com/app/' + gameIds[counter];
+                    let urlElement = document.createElement("a");
+                    urlElement.href = url;
+                    urlElement.textContent = "Steam Link";
+                    gamesOnPage[i].parentNode.insertBefore(urlElement, gamesOnPage[i].nextSibling);
+                    counter++;
+                }
             }
         }
 
     });
+// hash mao?
