@@ -7,11 +7,11 @@
 let runbutton = document.getElementById('run-button');
 let settingsbutton = document.getElementById("settings-button");
 let namesOnPage = [];
-let viableIds = [];
 let viableGameData = [];
-let viableNames = [];
-let normalizedNames = [];
+let nameIdHash = [];
 let currCountry = "CA";
+
+const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
 $(function () {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
@@ -27,12 +27,9 @@ $(function () {
     };
 
     settingsbutton.onclick = function () {
-        document.getElementById('settings').style.zIndex = "5";
-        document.getElementById('settings').style.display = "block";
-
+        $('#settings').css({"zIndex" : "5", "display" : "block"});
         document.getElementById("back-button").onclick = function () {
-            document.getElementById('settings').style.zIndex = "-1";
-            document.getElementById('settings').style.display = "none";
+            $('#settings').css({"zIndex" : "-1", "display" : "none"});
         };
 
         let countryList = document.getElementById("country-list");
@@ -64,19 +61,17 @@ function processNameData(data) {
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < namesOnPage.length; j++) {
             if (allSteamGames[i].name === namesOnPage[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')) {
-                viableNames.push(namesOnPage[j]);
-                normalizedNames.push(namesOnPage[j].replace(/[^a-zA-Z0-9]/g, ''));
                 let gameId = allSteamGames[i].appid;
-                viableIds.push(gameId);
+                nameIdHash.push([namesOnPage[j], gameId, namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')]);
                 let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a></td><td class = "game-price"></td></tr>';
                 document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
-                document.getElementsByClassName("game-link").item(viableIds.length - 1).href = "https://store.steampowered.com/app/" + gameId;
+                document.getElementsByClassName("game-link").item(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
         }
     }
     document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
-    let unParsedGames = namesOnPage.filter(x => !viableNames.includes(x));
+    let unParsedGames = namesOnPage.filter(x => !arrayColumn(nameIdHash, 0).includes(x));
     for (let i = 0; i < unParsedGames.length; i++) {
         document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
     }
@@ -84,8 +79,8 @@ function processNameData(data) {
 }
 
 function getPrices() {
-    $.each(viableIds, function (index) {
-        parsePrices(viableIds[index]);
+    $.each(nameIdHash, function (index) {
+        parsePrices(nameIdHash[index][1]);
     });
 }
 
@@ -101,7 +96,7 @@ function parsePrices(gameId) {
 function processPriceData(data) {
     viableGameData.push(data);
 
-    if (viableIds.length === viableGameData.length) {
+    if (nameIdHash.length === viableGameData.length) {
         injectPrices();
     }
 }
@@ -117,14 +112,9 @@ function injectPrices() {
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
 
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
-        console.log(tabs);
         chrome.tabs.sendMessage(tabs[0].id, {
             greeting: "injectLinks",
-            gameNames: normalizedNames,
-            gameIds: viableIds
-        }, function (response) {
-            console.log(tabs);
-            console.log(response);
+            datatable: nameIdHash
         });
     })
 }
