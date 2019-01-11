@@ -4,8 +4,8 @@
 
 'use strict';
 
-let runbutton = document.getElementById('run-button');
-let settingsbutton = document.getElementById("settings-button");
+let runButton = document.getElementById('run-button');
+let settingsButton = document.getElementById("settings-button");
 let namesOnPage = [];
 let viableGameData = [];
 let nameIdHash = [];
@@ -21,15 +21,19 @@ $(function () {
         }
     });
 
-    runbutton.onclick = function () {
+    runButton.onclick = function () {
         document.getElementById('loading').style.zIndex = "5";
         runApp();
     };
 
-    settingsbutton.onclick = function () {
+    settingsButton.onclick = function () {
         $('#settings').css({"zIndex" : "5", "display" : "block"});
+        $('body').css({'width' : '150px'});
+
         document.getElementById("back-button").onclick = function () {
             $('#settings').css({"zIndex" : "-1", "display" : "none"});
+            $('body').css({'width' : '100%'});
+
         };
 
         let countryList = document.getElementById("country-list");
@@ -53,8 +57,8 @@ function parseNameData() {
 }
 
 function processNameData(data) {
-    settingsbutton.remove();
-    runbutton.remove();
+    settingsButton.remove();
+    runButton.remove();
     let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
     document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
     let allSteamGames = data.applist.apps;
@@ -63,6 +67,7 @@ function processNameData(data) {
             if (allSteamGames[i].name === namesOnPage[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')) {
                 let gameId = allSteamGames[i].appid;
                 nameIdHash.push([namesOnPage[j], gameId, namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')]);
+
                 let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a></td><td class = "game-price"></td></tr>';
                 document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
                 document.getElementsByClassName("game-link").item(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
@@ -111,6 +116,10 @@ function injectPrices() {
     document.getElementById('loading').style.zIndex = "-1";
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
 
+    sendDataToBackground();
+}
+
+function sendDataToBackground() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {
             greeting: "injectLinks",

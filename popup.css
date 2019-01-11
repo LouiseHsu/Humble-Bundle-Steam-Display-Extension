@@ -27,7 +27,7 @@ body {
 #settings {
     top: 0;
     /*height: 72px;*/
-    width: 107px;
+    width: 150px;
     position: absolute;
     background-color: #494F5C;
     z-index: -1;
@@ -174,4 +174,16 @@ hr {
     width: 107px;
     height: 72px;
     z-index: 100;
+}
+
+.injectedLink {
+    background-color: #98B248;
+    border-radius: 5px;
+    font-family: 'Raleway', sans-serif;
+    padding: 5px;
+    margin-top: 10px;
+    right: -30%;
+    width: 40%;
+    text-align: center;
+    display: inline-block !important;
 }

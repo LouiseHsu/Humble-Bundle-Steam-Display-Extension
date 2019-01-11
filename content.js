@@ -13,6 +13,9 @@ chrome.runtime.onMessage.addListener(
         }
 
         if (request.greeting === "injectLinks") {
+            if (document.getElementsByClassName('injectLinks').length > 0) {
+                return;
+            }
             let nameIdHash = request.datatable;
             let gamesOnPage = document.getElementsByClassName('dd-image-box-text');
             for (let i = 0; i < gamesOnPage.length; i++) {
@@ -22,9 +25,11 @@ chrome.runtime.onMessage.addListener(
                     let urlElement = document.createElement("a");
                     urlElement.href = url;
                     urlElement.textContent = "Steam Link";
+                    urlElement.classList.add('injectedLink');
+                    urlElement.rel = "stylesheet";
+
                     gamesOnPage[i].parentNode.insertBefore(urlElement, gamesOnPage[i]);
                 }
             }
         }
-
     });

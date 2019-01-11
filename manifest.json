@@ -6,10 +6,11 @@
   "content_scripts": [
     {
       "matches": [ "https://www.humblebundle.com/games/*"],
+      "css": ["popup.css"],
       "js": [ "content.js" ]
     }
   ],
-  "web_accessible_resources": ["images/ajax-loader.gif"],
+  "web_accessible_resources": ["images/ajax-loader.gif", "popup,css"],
    "content_security_policy": "script-src 'self' ; object-src 'self'",
   "browser_action": {
     "default_popup": "popup.html",
