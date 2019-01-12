@@ -22,7 +22,7 @@ $(function () {
     });
 
     runButton.onclick = function () {
-        document.getElementById('loading').style.zIndex = "5";
+        $('#loading').css({"zIndex" : "5"});
         runApp();
     };
 
@@ -30,13 +30,12 @@ $(function () {
         $('#settings').css({"zIndex" : "5", "display" : "block"});
         $('body').css({'width' : '150px'});
 
-        document.getElementById("back-button").onclick = function () {
+        $("#back-button").onclick = function () {
             $('#settings').css({"zIndex" : "-1", "display" : "none"});
             $('body').css({'width' : '100%'});
-
         };
 
-        let countryList = document.getElementById("country-list");
+        let countryList = $("#country-list");
         countryList.onchange = function () {
             currCountry = countryList.options[countryList.selectedIndex].value;
         }
@@ -53,33 +52,38 @@ function runApp() {
 }
 
 function parseNameData() {
-    $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', processNameData);
+    $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', processAndInject);
 }
 
-function processNameData(data) {
+function processAndInject(nameData) {
+    let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
+    let tableList = $('#game-list');
+    let allSteamGames = nameData.applist.apps;
+
     settingsButton.remove();
     runButton.remove();
-    let tableHeader = '<tr id="table-header"><th>Game Name</th><th>Price</th></tr>';
-    document.getElementById("game-list").insertAdjacentHTML('beforeend', tableHeader);
-    let allSteamGames = data.applist.apps;
+    tableList.append(tableHeader);
+
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < namesOnPage.length; j++) {
             if (allSteamGames[i].name === namesOnPage[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')) {
                 let gameId = allSteamGames[i].appid;
-                nameIdHash.push([namesOnPage[j], gameId, namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')]);
-
                 let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a></td><td class = "game-price"></td></tr>';
-                document.getElementById("game-list").insertAdjacentHTML('beforeend', newGameRow);
-                document.getElementsByClassName("game-link").item(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
+
+                nameIdHash.push([namesOnPage[j], gameId, namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')]);
+                tableList.append(newGameRow);
+                $(".game-link").get(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
         }
     }
-    document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
+
     let unParsedGames = namesOnPage.filter(x => !arrayColumn(nameIdHash, 0).includes(x));
+    document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
     for (let i = 0; i < unParsedGames.length; i++) {
         document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
     }
+
     getPrices();
 }
 
@@ -111,7 +115,7 @@ function injectPrices() {
         let key = Object.keys(viableGameData[j]);
         let price = viableGameData[j][key].data.price_overview.final;
         price = price / 100;
-        document.getElementsByClassName("game-price").item(j).textContent = "$" + price;
+        $(".game-price").get(j).textContent = "$" + price;
     }
     document.getElementById('loading').style.zIndex = "-1";
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
