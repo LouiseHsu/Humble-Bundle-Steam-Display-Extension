@@ -30,9 +30,10 @@ $(function () {
         $('#settings').css({"zIndex" : "5", "display" : "block"});
         $('body').css({'width' : '150px'});
 
-        $("#back-button").onclick = function () {
+        document.getElementById("back-button").onclick = function () {
             $('#settings').css({"zIndex" : "-1", "display" : "none"});
-            $('body').css({'width' : '100%'});
+            $('body').css({'width' : '100%'}).removeAttr('width');
+
         };
 
         let countryList = $("#country-list");
@@ -69,7 +70,6 @@ function processAndInject(nameData) {
             if (allSteamGames[i].name === namesOnPage[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')) {
                 let gameId = allSteamGames[i].appid;
                 let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a></td><td class = "game-price"></td></tr>';
-
                 nameIdHash.push([namesOnPage[j], gameId, namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')]);
                 tableList.append(newGameRow);
                 $(".game-link").get(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
@@ -115,6 +115,7 @@ function injectPrices() {
         let key = Object.keys(viableGameData[j]);
         let price = viableGameData[j][key].data.price_overview.final;
         price = price / 100;
+        nameIdHash[j].push(price);
         $(".game-price").get(j).textContent = "$" + price;
     }
     document.getElementById('loading').style.zIndex = "-1";

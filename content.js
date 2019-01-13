@@ -18,17 +18,22 @@ chrome.runtime.onMessage.addListener(
             }
             let nameIdHash = request.datatable;
             let gamesOnPage = $('.dd-image-box-text');
+            let tooltipsOnPage = $('.dd-tooltiptext');
+            for (let i = 0; i < tooltipsOnPage.length; i++) {
+                tooltipsOnPage[i].style.zIndex = "2";
+            }
+            let counter = 0;
             for (let i = 0; i < gamesOnPage.length; i++) {
                 let index = arrayColumn(nameIdHash, 2).indexOf(gamesOnPage[i].textContent.replace(/[^a-zA-Z0-9]/g, ''));
                 if (index !== -1) {
-                    let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[index];
+                    let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[i];
                     let urlElement = document.createElement("a");
                     urlElement.href = url;
-                    urlElement.textContent = "Steam Link";
+                    urlElement.textContent = "Current Steam Price: " + arrayColumn(nameIdHash, 3)[counter];
                     urlElement.classList.add('injectedLink');
                     urlElement.rel = "stylesheet";
-
                     gamesOnPage[i].parentNode.insertBefore(urlElement, gamesOnPage[i]);
+                    counter++;
                 }
             }
         }
