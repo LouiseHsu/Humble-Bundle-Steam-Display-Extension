@@ -22,7 +22,7 @@ $(function () {
     });
 
     runButton.onclick = function () {
-        $('#loading').css({"zIndex" : "5"});
+        showLoadingScreen();
         runApp();
     };
 
@@ -42,6 +42,14 @@ $(function () {
         }
     }
 });
+
+function showLoadingScreen() {
+    $('#loading').css({"zIndex" : "5"});
+}
+
+function removeLoadingScreen() {
+    document.getElementById('loading').style.zIndex = "-1";
+}
 
 function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
@@ -118,7 +126,7 @@ function injectPrices() {
         nameIdHash[j].push(price);
         $(".game-price").get(j).textContent = "$" + price;
     }
-    document.getElementById('loading').style.zIndex = "-1";
+    removeLoadingScreen();
     document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
 
     sendDataToBackground();
