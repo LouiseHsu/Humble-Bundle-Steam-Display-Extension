@@ -16,14 +16,14 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/extensionIcon16",
+      "16": "images/extensionIcon16.png",
       "32": "images/extensionIcon32.png",
-      "48": "images/get_started48.png",
+      "48": "images/extensionIcon48.png",
       "128": "images/extensionIcon128.png"
     }
   },
   "icons": {
-    "16": "images/extensionIcon16",
+    "16": "images/extensionIcon16.png",
     "32": "images/extensionIcon32.png",
     "48": "images/extensionIcon48.png",
     "128": "images/extensionIcon128.png"
