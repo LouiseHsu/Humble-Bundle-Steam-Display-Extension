@@ -1,6 +1,6 @@
 {
   "name": "Humble Bundle Steam Tool",
-  "version": "1.0",
+  "version": "0.1",
   "description": "A extensions that displays the steam links and current prices of all links in a humble bundle!",
   "permissions": [ "https://www.humblebundle.com/games/*", "declarativeContent", "storage", "https://store.steampowered.com/api/", "http://api.steampowered.com/ISteamApps/GetAppList/v0002/" ],
   "content_scripts": [

@@ -16,7 +16,7 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
 $(function () {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         let currURL = tabs[0].url;
-        if (!currURL.includes("https://www.humblebundle.com/")) {
+        if (!currURL.includes("https://www.humblebundle.com/games")) {
             window.close();
         }
     });

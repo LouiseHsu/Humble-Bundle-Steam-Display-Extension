@@ -29,7 +29,7 @@ chrome.runtime.onMessage.addListener(
                     let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[i];
                     let urlElement = document.createElement("a");
                     urlElement.href = url;
-                    urlElement.textContent = "Current Steam Price: " + arrayColumn(nameIdHash, 3)[counter];
+                    urlElement.textContent = "Current Steam Price: $" + arrayColumn(nameIdHash, 3)[counter];
                     urlElement.classList.add('injectedLink');
                     urlElement.rel = "stylesheet";
                     gamesOnPage[i].parentNode.insertBefore(urlElement, gamesOnPage[i]);
