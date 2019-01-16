@@ -81,7 +81,7 @@ function processAndInject(nameData) {
 
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < namesOnPage.length; j++) {
-            let normalizedGameName = normalizeString(namesOnPage[j].name);
+            let normalizedGameName = normalizeString(namesOnPage[j]);
             if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
                 let gameId = allSteamGames[i].appid;
                 let newGameRow = '<tr class="entry">' +
