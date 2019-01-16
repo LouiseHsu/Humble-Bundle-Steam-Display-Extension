@@ -183,7 +183,7 @@ hr {
     padding: 7px;
     margin-top: 10px;
     right: -30%;
-    width: 40%;
+    width: calc(40% - 14px);
     text-align: center;
     display: inline-block !important;
 }

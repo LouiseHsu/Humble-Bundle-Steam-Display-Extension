@@ -61,7 +61,13 @@ function runApp() {
 }
 
 function parseNameData() {
-    $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', processAndInject);
+    $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', generateLinkTable);
+}
+
+function generateLinkTable(nameData) {
+    processAndInject(nameData);
+    handleUnparsedGames();
+    getPrices();
 }
 
 function processAndInject(nameData) {
@@ -75,24 +81,33 @@ function processAndInject(nameData) {
 
     for (let i = 0; i < allSteamGames.length; i++) {
         for (let j = 0; j < namesOnPage.length; j++) {
-            if (allSteamGames[i].name === namesOnPage[j] || allSteamGames[i].name.replace(/[^a-zA-Z0-9]/g, '') === namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')) {
+            let normalizedGameName = normalizeString(namesOnPage[j].name);
+            if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
                 let gameId = allSteamGames[i].appid;
-                let newGameRow = '<tr class="entry"><td class="game-link-cell"><a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a></td><td class = "game-price"></td></tr>';
-                nameIdHash.push([namesOnPage[j], gameId, namesOnPage[j].replace(/[^a-zA-Z0-9]/g, '')]);
+                let newGameRow = '<tr class="entry">' +
+                                    '<td class="game-link-cell">' +
+                                        '<a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a>' +
+                                        '</td><td class = "game-price">' +
+                                    '</td>' +
+                                 '</tr>';
+
+                nameIdHash.push([namesOnPage[j], gameId, normalizedGameName]);
                 tableList.append(newGameRow);
                 $(".game-link").get(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
         }
     }
+}
 
+function handleUnparsedGames() {
     let unParsedGames = namesOnPage.filter(x => !arrayColumn(nameIdHash, 0).includes(x));
-    document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
-    for (let i = 0; i < unParsedGames.length; i++) {
-        document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
+    if (unParsedGames.length !== 0) {
+        document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
+        for (let i = 0; i < unParsedGames.length; i++) {
+            document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
+        }
     }
-
-    getPrices();
 }
 
 function getPrices() {
@@ -139,6 +154,10 @@ function sendDataToBackground() {
             datatable: nameIdHash
         });
     })
+}
+
+function normalizeString(string) {
+    return string.replace(/[^a-zA-Z0-9]/g, '');
 }
 
 

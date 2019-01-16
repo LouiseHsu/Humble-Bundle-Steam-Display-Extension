@@ -1,5 +1,9 @@
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
+function normalizeText(string) {
+    string.replace(/[^a-zA-Z0-9]/g, '');
+}
+
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         if (request.greeting === "getGameNames") {
@@ -29,7 +33,7 @@ chrome.runtime.onMessage.addListener(
                     let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[i];
                     let urlElement = document.createElement("a");
                     urlElement.href = url;
-                    urlElement.textContent = "Current Steam Price: $" + arrayColumn(nameIdHash, 3)[counter];
+                    urlElement.textContent = "Current Steam Price: $" + arrayColumn(nameIdHash, 3)[index];
                     urlElement.classList.add('injectedLink');
                     urlElement.rel = "stylesheet";
                     gamesOnPage[i].parentNode.insertBefore(urlElement, gamesOnPage[i]);
