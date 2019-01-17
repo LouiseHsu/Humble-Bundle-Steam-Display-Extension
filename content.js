@@ -1,7 +1,7 @@
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
-function normalizeText(string) {
-    string.replace(/[^a-zA-Z0-9]/g, '');
+function normalizeString(string) {
+    return string.replace(/[^a-zA-Z0-9]/g, '');
 }
 
 chrome.runtime.onMessage.addListener(
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener(
             }
             let counter = 0;
             for (let i = 0; i < gamesOnPage.length; i++) {
-                let index = arrayColumn(nameIdHash, 2).indexOf(gamesOnPage[i].textContent.replace(/[^a-zA-Z0-9]/g, ''));
+                let index = arrayColumn(nameIdHash, 2).indexOf(normalizeString(gamesOnPage[i].textContent));
                 if (index !== -1) {
                     let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[i];
                     let urlElement = document.createElement("a");
