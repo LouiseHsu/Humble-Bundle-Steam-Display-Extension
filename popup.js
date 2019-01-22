@@ -84,20 +84,25 @@ function processAndInject(nameData) {
             let normalizedGameName = normalizeString(namesOnPage[j]);
             if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
                 let gameId = allSteamGames[i].appid;
-                let newGameRow = '<tr class="entry">' +
-                                    '<td class="game-link-cell">' +
-                                        '<a class = game-link target="_blank" href="">' + namesOnPage[j].toString() + '</a>' +
-                                        '</td><td class = "game-price">' +
-                                    '</td>' +
-                                 '</tr>';
-
                 nameIdHash.push([namesOnPage[j], gameId, normalizedGameName]);
+
+                let newGameRow = createNewGameRow(namesOnPage[j].toString());
                 tableList.append(newGameRow);
+
                 $(".game-link").get(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
         }
     }
+}
+
+function createNewGameRow(gameName) {
+    return '<tr class="entry">' +
+                '<td class="game-link-cell">' +
+                    '<a class = game-link target="_blank" href="">' + gameName + '</a>' +
+                    '</td><td class = "game-price">' +
+                '</td>' +
+            '</tr>';
 }
 
 function handleUnparsedGames() {
