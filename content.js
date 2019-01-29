@@ -21,6 +21,7 @@ chrome.runtime.onMessage.addListener(
                 return;
             }
             let nameIdHash = request.datatable;
+            console.log(nameIdHash);
             let gamesOnPage = $('.dd-image-box-text');
             let tooltipsOnPage = $('.dd-tooltiptext');
             for (let i = 0; i < tooltipsOnPage.length; i++) {
@@ -30,7 +31,7 @@ chrome.runtime.onMessage.addListener(
             for (let i = 0; i < gamesOnPage.length; i++) {
                 let index = arrayColumn(nameIdHash, 2).indexOf(normalizeString(gamesOnPage[i].textContent));
                 if (index !== -1) {
-                    let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[i];
+                    let url = 'https://store.steampowered.com/app/' + arrayColumn(nameIdHash, 1)[index];
                     let urlElement = document.createElement("a");
                     urlElement.href = url;
                     urlElement.textContent = "Current Steam Price: $" + arrayColumn(nameIdHash, 3)[index];

@@ -141,8 +141,15 @@ function processPriceData(data) {
 function injectPrices() {
     for (let j = 0; j < viableGameData.length; j++) {
         let key = Object.keys(viableGameData[j]);
-        let price = viableGameData[j][key].data.price_overview.final;
-        price = price / 100;
+        console.log(viableGameData[j][key].data);
+        debugger;
+        let price;
+        if (viableGameData[j][key].data.length === 0) {
+            price = 0.00;
+        } else {
+            price = viableGameData[j][key].data.price_overview.final;
+            price = price / 100;
+        }
         nameIdHash[j].push(price);
         $(".game-price").get(j).textContent = "$" + price;
     }
