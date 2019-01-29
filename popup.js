@@ -9,6 +9,7 @@ let settingsButton = document.getElementById("settings-button");
 let namesOnPage = [];
 let viableGameData = [];
 let nameIdHash = [];
+let gameDataArray = [];
 let currCountry = "CA";
 
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
@@ -85,6 +86,14 @@ function processAndInject(nameData) {
             if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
                 let gameId = allSteamGames[i].appid;
                 nameIdHash.push([namesOnPage[j], gameId, normalizedGameName]);
+                gameDataArray.push(
+                    {
+                        name: namesOnPage[j],
+                        id: gameId,
+                        normalizedName : normalizedGameName,
+                        price : getGamePrice(gameId)
+                    }
+                );
 
                 let newGameRow = createNewGameRow(namesOnPage[j].toString());
                 tableList.append(newGameRow);
@@ -94,6 +103,26 @@ function processAndInject(nameData) {
             }
         }
     }
+    console.log(gameDataArray);
+}
+
+function getGamePrice(gameId) {
+    let price = 0;
+    $.ajax({
+        async: false,
+        dataType: "json",
+        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=' + currCountry + '&filters=price_overview',
+        success: function (data) {
+            let key = Object.keys(data);
+            if (data[key].data.length === 0) {
+                price = 0.00;
+            } else {
+                price = data[key].data.price_overview.final;
+                price = price / 100;
+            }
+        }
+    });
+    return price;
 }
 
 function createNewGameRow(gameName) {
@@ -141,8 +170,6 @@ function processPriceData(data) {
 function injectPrices() {
     for (let j = 0; j < viableGameData.length; j++) {
         let key = Object.keys(viableGameData[j]);
-        console.log(viableGameData[j][key].data);
-        debugger;
         let price;
         if (viableGameData[j][key].data.length === 0) {
             price = 0.00;
