@@ -68,7 +68,12 @@ function parseNameData() {
 function generateLinkTable(nameData) {
     processAndInject(nameData);
     handleUnparsedGames();
-    getPrices();
+
+    removeLoadingScreen();
+    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
+
+    sendDataToBackground();
+    // getPrices();
 }
 
 function processAndInject(nameData) {
@@ -85,17 +90,16 @@ function processAndInject(nameData) {
             let normalizedGameName = normalizeString(namesOnPage[j]);
             if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
                 let gameId = allSteamGames[i].appid;
-                nameIdHash.push([namesOnPage[j], gameId, normalizedGameName]);
-                gameDataArray.push(
+                let gameobj =
                     {
                         name: namesOnPage[j],
                         id: gameId,
                         normalizedName : normalizedGameName,
                         price : getGamePrice(gameId)
-                    }
-                );
+                    };
+                gameDataArray.push(gameobj);
 
-                let newGameRow = createNewGameRow(namesOnPage[j].toString());
+                let newGameRow = createNewGameRow(gameobj);
                 tableList.append(newGameRow);
 
                 $(".game-link").get(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
@@ -104,6 +108,7 @@ function processAndInject(nameData) {
         }
     }
     console.log(gameDataArray);
+
 }
 
 function getGamePrice(gameId) {
@@ -125,17 +130,32 @@ function getGamePrice(gameId) {
     return price;
 }
 
-function createNewGameRow(gameName) {
-    return '<tr class="entry">' +
-                '<td class="game-link-cell">' +
-                    '<a class = game-link target="_blank" href="">' + gameName + '</a>' +
-                    '</td><td class = "game-price">' +
-                '</td>' +
-            '</tr>';
+function createNewGameRow(gameobj) {
+    let rowElement = document.createElement("tr");
+    rowElement.classList.add('entry');
+
+    let gameLinkElement = document.createElement('td');
+    gameLinkElement.classList.add('game-link-cell');
+
+    let linkElement = document.createElement('a');
+    linkElement.classList.add('game-link');
+    linkElement.target = "_blank";
+    linkElement.href = "https://store.steampowered.com/app/" + gameobj.id;
+    linkElement.textContent = gameobj.name;
+
+    let gamePriceElement = document.createElement('td');
+    gamePriceElement.classList.add('game-price');
+    gamePriceElement.textContent = "$" + gameobj.price;
+
+    gameLinkElement.appendChild(linkElement);
+    rowElement.appendChild(gameLinkElement);
+    rowElement.appendChild(gamePriceElement);
+
+    return rowElement;
 }
 
 function handleUnparsedGames() {
-    let unParsedGames = namesOnPage.filter(x => !arrayColumn(nameIdHash, 0).includes(x));
+    let unParsedGames = namesOnPage.filter(x => !gameDataArray.map(game => game.name));
     if (unParsedGames.length !== 0) {
         document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
         for (let i = 0; i < unParsedGames.length; i++) {
@@ -144,53 +164,11 @@ function handleUnparsedGames() {
     }
 }
 
-function getPrices() {
-    $.each(nameIdHash, function (index) {
-        parsePrices(nameIdHash[index][1]);
-    });
-}
-
-function parsePrices(gameId) {
-    $.ajax({
-        async: false,
-        dataType: "json",
-        url: 'https://store.steampowered.com/api/appdetails/?appids=' + gameId + '&cc=' + currCountry + '&filters=price_overview',
-        success: processPriceData
-    });
-}
-
-function processPriceData(data) {
-    viableGameData.push(data);
-
-    if (nameIdHash.length === viableGameData.length) {
-        injectPrices();
-    }
-}
-
-function injectPrices() {
-    for (let j = 0; j < viableGameData.length; j++) {
-        let key = Object.keys(viableGameData[j]);
-        let price;
-        if (viableGameData[j][key].data.length === 0) {
-            price = 0.00;
-        } else {
-            price = viableGameData[j][key].data.price_overview.final;
-            price = price / 100;
-        }
-        nameIdHash[j].push(price);
-        $(".game-price").get(j).textContent = "$" + price;
-    }
-    removeLoadingScreen();
-    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
-
-    sendDataToBackground();
-}
-
 function sendDataToBackground() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {
             greeting: "injectLinks",
-            datatable: nameIdHash
+            datatable: gameDataArray
         });
     })
 }
