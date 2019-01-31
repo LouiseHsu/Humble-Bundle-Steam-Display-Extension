@@ -7,12 +7,8 @@
 let runButton = document.getElementById('run-button');
 let settingsButton = document.getElementById("settings-button");
 let namesOnPage = [];
-let viableGameData = [];
-let nameIdHash = [];
 let gameDataArray = [];
 let currCountry = "CA";
-
-const arrayColumn = (arr, n) => arr.map(x => x[n]);
 
 $(function () {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
@@ -52,6 +48,11 @@ function removeLoadingScreen() {
     document.getElementById('loading').style.zIndex = "-1";
 }
 
+function smoothResize() {
+    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
+    document.getElementById("content").style.width = window.getComputedStyle(document.getElementById("size-manager")).width;
+}
+
 function runApp() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
@@ -70,10 +71,9 @@ function generateLinkTable(nameData) {
     handleUnparsedGames();
 
     removeLoadingScreen();
-    document.getElementById("content").style.height = window.getComputedStyle(document.getElementById("size-manager")).height;
+    smoothResize();
 
     sendDataToBackground();
-    // getPrices();
 }
 
 function processAndInject(nameData) {
@@ -90,16 +90,16 @@ function processAndInject(nameData) {
             let normalizedGameName = normalizeString(namesOnPage[j]);
             if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
                 let gameId = allSteamGames[i].appid;
-                let gameobj =
+                let gameObj =
                     {
                         name: namesOnPage[j],
                         id: gameId,
                         normalizedName : normalizedGameName,
                         price : getGamePrice(gameId)
                     };
-                gameDataArray.push(gameobj);
+                gameDataArray.push(gameObj);
 
-                let newGameRow = createNewGameRow(gameobj);
+                let newGameRow = createNewGameRow(gameObj);
                 tableList.append(newGameRow);
                 break;
             }
@@ -126,7 +126,7 @@ function getGamePrice(gameId) {
     return price;
 }
 
-function createNewGameRow(gameobj) {
+function createNewGameRow(gameObj) {
     let rowElement = document.createElement("tr");
     rowElement.classList.add('entry');
 
@@ -136,12 +136,12 @@ function createNewGameRow(gameobj) {
     let linkElement = document.createElement('a');
     linkElement.classList.add('game-link');
     linkElement.target = "_blank";
-    linkElement.href = "https://store.steampowered.com/app/" + gameobj.id;
-    linkElement.textContent = gameobj.name;
+    linkElement.href = "https://store.steampowered.com/app/" + gameObj.id;
+    linkElement.textContent = gameObj.name;
 
     let gamePriceElement = document.createElement('td');
     gamePriceElement.classList.add('game-price');
-    gamePriceElement.textContent = "$" + gameobj.price;
+    gamePriceElement.textContent = "$" + gameObj.price;
 
     gameLinkElement.appendChild(linkElement);
     rowElement.appendChild(gameLinkElement);
@@ -152,36 +152,48 @@ function createNewGameRow(gameobj) {
 
 function handleUnparsedGames() {
     let unParsedGames = namesOnPage.filter(x => !gameDataArray.map(game => game.name).includes(x));
+
     if (unParsedGames.length !== 0) {
-        let hrElement = document.createElement('hr');
-
-        let tableElement = document.createElement('table');
-        tableElement.id = "failed-list";
-
-        let trElement = document.createElement('tr');
-        trElement.id = "failed-table-header";
-
-        let thElement = document.createElement('th');
-        thElement.textContent = "Unparsed Games";
-
-        trElement.appendChild(thElement);
-        tableElement.appendChild(trElement);
-
-        document.getElementById("size-manager").appendChild(hrElement);
-        document.getElementById("size-manager").appendChild(tableElement);
-
+        let tableElement = createFailedTable();
         for (let i = 0; i < unParsedGames.length; i++) {
-            let failedRow = document.createElement('tr');
-            failedRow.classList.add("entry");
-
-            let failedCell = document.createElement('td');
-            failedCell.classList.add("failed-game");
-            failedCell.textContent = unParsedGames[i];
-
-            failedRow.appendChild(failedCell);
+            let failedRow = createFailedRow(unParsedGames[i]);
             tableElement.appendChild(failedRow);
         }
     }
+}
+
+function createFailedTable() {
+    let hrElement = document.createElement('hr');
+
+    let tableElement = document.createElement('table');
+    tableElement.id = "failed-list";
+
+    let trElement = document.createElement('tr');
+    trElement.id = "failed-table-header";
+
+    let thElement = document.createElement('th');
+    thElement.textContent = "Unparsed Games";
+
+    trElement.appendChild(thElement);
+    tableElement.appendChild(trElement);
+
+    let sizeManager = document.getElementById("size-manager");
+    sizeManager.appendChild(hrElement);
+    sizeManager.appendChild(tableElement);
+
+    return tableElement;
+}
+
+function createFailedRow(failedGameName) {
+    let failedRow = document.createElement('tr');
+    failedRow.classList.add("entry");
+
+    let failedCell = document.createElement('td');
+    failedCell.classList.add("failed-game");
+    failedCell.textContent = failedGameName;
+
+    failedRow.appendChild(failedCell);
+    return failedRow;
 }
 
 function sendDataToBackground() {
@@ -196,5 +208,3 @@ function sendDataToBackground() {
 function normalizeString(string) {
     return string.replace(/[^a-zA-Z0-9]/g, '');
 }
-
-
