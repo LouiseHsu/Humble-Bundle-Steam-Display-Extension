@@ -101,14 +101,10 @@ function processAndInject(nameData) {
 
                 let newGameRow = createNewGameRow(gameobj);
                 tableList.append(newGameRow);
-
-                $(".game-link").get(nameIdHash.length - 1).href = "https://store.steampowered.com/app/" + gameId;
                 break;
             }
         }
     }
-    console.log(gameDataArray);
-
 }
 
 function getGamePrice(gameId) {
@@ -155,11 +151,35 @@ function createNewGameRow(gameobj) {
 }
 
 function handleUnparsedGames() {
-    let unParsedGames = namesOnPage.filter(x => !gameDataArray.map(game => game.name));
+    let unParsedGames = namesOnPage.filter(x => !gameDataArray.map(game => game.name).includes(x));
     if (unParsedGames.length !== 0) {
-        document.getElementById("size-manager").insertAdjacentHTML('beforeend', '<hr><table id="failed-list"><tr id="failed-table-header"><th>Unparsed Games</th></tr></table>');
+        let hrElement = document.createElement('hr');
+
+        let tableElement = document.createElement('table');
+        tableElement.id = "failed-list";
+
+        let trElement = document.createElement('tr');
+        trElement.id = "failed-table-header";
+
+        let thElement = document.createElement('th');
+        thElement.textContent = "Unparsed Games";
+
+        trElement.appendChild(thElement);
+        tableElement.appendChild(trElement);
+
+        document.getElementById("size-manager").appendChild(hrElement);
+        document.getElementById("size-manager").appendChild(tableElement);
+
         for (let i = 0; i < unParsedGames.length; i++) {
-            document.getElementById("failed-list").insertAdjacentHTML('beforeend', '<tr class="entry"><td class="failed-game">' + unParsedGames[i] + '</td></tr>')
+            let failedRow = document.createElement('tr');
+            failedRow.classList.add("entry");
+
+            let failedCell = document.createElement('td');
+            failedCell.classList.add("failed-game");
+            failedCell.textContent = unParsedGames[i];
+
+            failedRow.appendChild(failedCell);
+            tableElement.appendChild(failedRow);
         }
     }
 }
