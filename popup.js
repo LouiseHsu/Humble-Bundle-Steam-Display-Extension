@@ -19,7 +19,6 @@ $(function () {
     });
 
     runButton.onclick = function () {
-        showLoadingScreen();
         runApp();
     };
 
@@ -54,15 +53,20 @@ function smoothResize() {
 }
 
 function runApp() {
+    showLoadingScreen();
+    parseNames();
+}
+
+function parseNames() {
     chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, {greeting: "getGameNames"}, function (response) {
             namesOnPage = response.response;
-            parseNameData();
+            grabNameData();
         });
     })
 }
 
-function parseNameData() {
+function grabNameData() {
     $.getJSON('http://api.steampowered.com/ISteamApps/GetAppList/v2/', generateLinkTable);
 }
 
@@ -72,8 +76,12 @@ function generateLinkTable(nameData) {
 
     removeLoadingScreen();
     smoothResize();
-
     sendDataToBackground();
+}
+
+function removeLandingPage() {
+    settingsButton.remove();
+    runButton.remove();
 }
 
 function processAndInject(nameData) {
@@ -81,8 +89,7 @@ function processAndInject(nameData) {
     let tableList = $('#game-list');
     let allSteamGames = nameData.applist.apps;
 
-    settingsButton.remove();
-    runButton.remove();
+    removeLandingPage();
     tableList.append(tableHeader);
 
     for (let i = 0; i < allSteamGames.length; i++) {
