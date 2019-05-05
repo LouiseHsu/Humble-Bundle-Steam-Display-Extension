@@ -96,6 +96,7 @@ function processAndInject(nameData) {
         for (let j = 0; j < namesOnPage.length; j++) {
             let normalizedGameName = normalizeString(namesOnPage[j]);
             if (allSteamGames[i].name === namesOnPage[j] || normalizeString(allSteamGames[i].name) === normalizedGameName) {
+                console.log(namesOnPage[j]);
                 let gameId = allSteamGames[i].appid;
                 let gameObj =
                     {
@@ -112,6 +113,8 @@ function processAndInject(nameData) {
             }
         }
     }
+    console.log(gameDataArray);
+    console.log(allSteamGames)
 }
 
 function getGamePrice(gameId) {
